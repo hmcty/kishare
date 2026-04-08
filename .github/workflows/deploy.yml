@@ -50,7 +50,7 @@ jobs:
 
       - run: npm ci
       - run: npm install
-      - run: npm exec kishare build
+      - run: npm exec kisite build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -35,12 +35,12 @@ describe('Indexer', () => {
     });
 
     it('should initialize paths correctly', async () => {
-      const { initializePaths, getRootDir, getOutputDir, getKishareRootDir } = await import('../src/indexer/indexer-utils.js');
+      const { initializePaths, getRootDir, getOutputDir, getKisiteRootDir } = await import('../src/indexer/indexer-utils.js');
 
       initializePaths();
 
       expect(getRootDir()).toBe(fixturesDir);
-      expect(getKishareRootDir()).toBe(kisiteRoot);
+      expect(getKisiteRootDir()).toBe(kisiteRoot);
       expect(getOutputDir()).toBe(path.join(kisiteRoot, 'public'));
     });
 

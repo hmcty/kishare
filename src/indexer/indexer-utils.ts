@@ -14,7 +14,7 @@ let OUTPUT_DIR: string;
 let KISITE_ROOT: string;
 
 // Get kisite installation root from environment variable or resolve from this file's location
-function getKishareRoot(): string {
+function getKisiteRoot(): string {
   if (process.env.KISITE_ROOT) {
     return path.resolve(process.env.KISITE_ROOT);
   }
@@ -52,7 +52,7 @@ export function loadConfig(): WorkspaceConfig {
 // OUTPUT_DIR = output directory for generated files (can be overridden via KISITE_OUTPUT_DIR)
 export function initializePaths() {
   ROOT_DIR = getProjectRoot();
-  KISITE_ROOT = getKishareRoot();
+  KISITE_ROOT = getKisiteRoot();
   // Allow OUTPUT_DIR to be overridden via environment variable (used by CLI with temp directories)
   OUTPUT_DIR = process.env.KISITE_OUTPUT_DIR || path.join(KISITE_ROOT, 'public');
 
@@ -83,7 +83,7 @@ export function getOutputDir(): string {
   return OUTPUT_DIR;
 }
 
-export function getKishareRootDir(): string {
+export function getKisiteRootDir(): string {
   if (!KISITE_ROOT) {
     throw new Error('Paths not initialized. Call initializePaths() first.');
   }
