@@ -97,7 +97,7 @@ export class WorkspaceApp extends HTMLElement {
       if (git.commitHashShort) {
         commitHashDisplay = `
           <span class="commit-separator">-</span>
-          <span class="commit-hash">{git.commitHashShort}</span>
+          <span class="commit-hash">${git.commitHashShort}</span>
         `;
       }
 
