@@ -21,9 +21,10 @@
     "tsconfig.json"
   ],
   "scripts": {
+    "check-kicanvas": "test -e ./vendor/kicanvas/.git || exit 1",
     "build-kicanvas": "cd ./vendor/kicanvas && npm install && npm run build",
     "copy-kicanvas": "mkdir -p lib && cp ./vendor/kicanvas/build/kicanvas.js lib/",
-    "prepare": "npm run build-kicanvas && npm run copy-kicanvas",
+    "prepublish": "npm run check-kicanvas && npm run build-kicanvas && npm run copy-kicanvas",
     "test": "vitest run"
   },
   "devDependencies": {
