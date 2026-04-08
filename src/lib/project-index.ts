@@ -26,13 +26,14 @@ export interface ProjectIndex {
 export interface ProjectMetadata {
   id: string;                  // Unique identifier
   name: string;                // Project name from .kicad_pro filename
-  path: string;                // Relative path from kicad root 
+  path: string;                // Relative path from kicad root
   projectFile: string;         // Web path to .kicad_pro
   schematics: SchematicFile[]; // All schematic files
   pcb?: string;                // Web path to .kicad_pcb if exists
   sheets: SheetInfo[];         // Sheet hierarchy from .kicad_pro
   zip?: string;                // Web path to downloadable zip file
   readme?: string;             // Markdown content from README.md or similar
+  thumbnail?: string;          // Web path to preview image (e.g., PCB render)
   createdAt?: string;          // ISO date string
   updatedAt?: string;          // ISO date string
   git?: GitInfo;               // Optional: per-project git info (for submodules)

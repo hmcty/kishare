@@ -41,7 +41,6 @@ describe('CLI', () => {
 
       expect(result.code).toBe(0);
       expect(result.stdout).toContain('kisite');
-      expect(result.stdout).toContain('dev');
       expect(result.stdout).toContain('build');
       expect(result.stdout).toContain('preview');
     });
@@ -194,55 +193,5 @@ describe('CLI', () => {
       // Basic sanity check - should be non-empty JavaScript
       expect(content.length).toBeGreaterThan(1000);
     });
-  });
-
-  describe('dev command', () => {
-    it('should start dev server and respond', async () => {
-      const child = spawn('node', [cliBin, 'dev'], {
-        cwd: fixturesDir,
-        env: { ...process.env, KISITE_NO_OPEN: '1' },
-      });
-
-      let output = '';
-
-      // Collect output
-      child.stdout.on('data', (data) => {
-        output += data.toString();
-      });
-      child.stderr.on('data', (data) => {
-        output += data.toString();
-      });
-
-      // Wait for server to actually respond (more reliable than parsing output)
-      const serverUrl = 'http://localhost:5173';
-      await new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          child.kill();
-          reject(new Error(`Dev server did not start within timeout. Output: ${output}`));
-        }, 30000);
-
-        const checkServer = async () => {
-          try {
-            const response = await fetch(serverUrl);
-            if (response.ok) {
-              clearTimeout(timeout);
-              resolve();
-              return;
-            }
-          } catch {
-            // Server not ready yet
-          }
-          setTimeout(checkServer, 500);
-        };
-        // Give the server a moment to initialize before polling
-        setTimeout(checkServer, 1000);
-      });
-
-      // Server responded successfully
-      expect(output).toMatch(/localhost/i);
-
-      // Clean up
-      child.kill();
-    }, 35000);
   });
 });

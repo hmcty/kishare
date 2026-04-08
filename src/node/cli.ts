@@ -19,7 +19,6 @@ Usage:
   kisite [command] [options]
 
 Commands:
-  dev      Start development server (default)
   build    Build static site
   preview  Preview built site
 
@@ -198,19 +197,6 @@ async function prepare(workDir: string) {
   await copyProjectFiles(workDir);
 }
 
-async function runDev() {
-  const workDir = createWorkDir();
-
-  await prepare(workDir);
-
-  const config = createViteConfig(workDir);
-  const server = await createServer(config);
-
-  await server.listen();
-  server.printUrls();
-  server.bindCLIShortcuts({ print: true });
-}
-
 async function runBuild() {
   const workDir = createWorkDir();
   const projectRoot = process.cwd();
@@ -235,10 +221,14 @@ async function runPreview() {
   }
 
   const server = await preview({
-    root: outDir,
+    root: projectRoot,
+    base: '',
+    build: {
+      outDir: 'dist',
+    },
     preview: {
       port: 4173,
-      open: true,
+      open: !process.env.KISITE_NO_OPEN,
     },
     configFile: false,
   });
@@ -248,7 +238,7 @@ async function runPreview() {
 
 async function main() {
   const args = process.argv.slice(2);
-  const command = args[0] || 'dev';
+  const command = args[0] || 'build';
 
   if (args.includes('--help') || args.includes('-h')) {
     printUsage();
@@ -266,9 +256,6 @@ async function main() {
 
   try {
     switch (command) {
-      case 'dev':
-        await runDev();
-        break;
       case 'build':
         await runBuild();
         break;

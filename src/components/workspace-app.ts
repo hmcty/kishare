@@ -56,6 +56,9 @@ export class WorkspaceApp extends HTMLElement {
       this.projectList.setGitInfo(index.git);
       this.projectList.setProjects(this.projects);
 
+      // Update viewer panel with projects for gallery view
+      this.viewerPanel.setProjects(this.projects, this.title);
+
       console.log(`Loaded ${this.projects.length} projects`);
     } catch (error) {
       console.error('Failed to load projects:', error);
@@ -97,6 +100,28 @@ export class WorkspaceApp extends HTMLElement {
     } else if (git.commitHashShort) {
       footer.innerHTML = DOMPurify.sanitize(`<span class="commit-hash">${git.commitHashShort}</span>`);
     }
+  }
+
+  /**
+   * Hide the sidebar completely (including toggle button)
+   */
+  private hideSidebar() {
+    const toggleBtn = this.querySelector('.sidebar-toggle') as HTMLElement;
+    const sidebar = this.querySelector('.sidebar') as HTMLElement;
+
+    sidebar?.classList.add('hidden');
+    toggleBtn?.classList.add('hidden');
+  }
+
+  /**
+   * Show the sidebar
+   */
+  private showSidebar() {
+    const toggleBtn = this.querySelector('.sidebar-toggle') as HTMLElement;
+    const sidebar = this.querySelector('.sidebar') as HTMLElement;
+
+    sidebar?.classList.remove('hidden');
+    toggleBtn?.classList.remove('hidden');
   }
 
   /**
@@ -197,10 +222,14 @@ export class WorkspaceApp extends HTMLElement {
     router.onRouteChange((route) => {
       if (route.path === '/project' && route.projectId) {
         this.loadProject(route.projectId, route.position, route.marker);
+        // Show sidebar when viewing a project
+        this.showSidebar();
       } else {
-        // Default route - show welcome
+        // Default route - show gallery
         this.viewerPanel.showWelcome();
         this.projectList.setSelectedProject(null);
+        // Hide sidebar when showing gallery
+        this.hideSidebar();
       }
     });
   }

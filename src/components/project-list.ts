@@ -168,7 +168,7 @@ export class ProjectList extends HTMLElement {
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
           </svg>
-          View all projects
+          Back to all projects
         </button>
 
         <div class="project-item selected">

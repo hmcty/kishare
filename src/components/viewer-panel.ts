@@ -6,6 +6,7 @@ import type { ProjectMetadata, GitInfo } from '../lib/project-index.js';
 import { router, type ViewPosition, type MarkerBounds } from '../lib/router.js';
 import { MARKER, TOAST } from '../lib/constants.js';
 import { githubIcon } from '../lib/html-utils.js';
+import { ProjectGallery } from './project-gallery.js';
 
 interface MousePosition {
   x: number;
@@ -17,6 +18,8 @@ export class ViewerPanel extends HTMLElement {
   private mousePosition: MousePosition = { x: 0, y: 0 };
   private gitInfo: GitInfo | null = null;
   private markerId: number | null = null;
+  private projects: ProjectMetadata[] = [];
+  private title: string = 'Projects';
 
   constructor() {
     super();
@@ -32,6 +35,16 @@ export class ViewerPanel extends HTMLElement {
    */
   setGitInfo(git: GitInfo) {
     this.gitInfo = git;
+  }
+
+  /**
+   * Set projects for the gallery view
+   */
+  setProjects(projects: ProjectMetadata[], title?: string) {
+    this.projects = projects;
+    if (title) {
+      this.title = title;
+    }
   }
 
   /**
@@ -507,17 +520,18 @@ export class ViewerPanel extends HTMLElement {
   }
 
   /**
-   * Show welcome message when no project is selected
+   * Show project gallery when no project is selected
    */
   showWelcome() {
     this.currentEmbed = null;
     this.clearMarker();
-    this.innerHTML = `
-      <div class="welcome">
-        <h2>KiSite Workspace</h2>
-        <p>Select a project from the sidebar to view schematics and PCBs</p>
-      </div>
-    `;
+
+    // Show gallery instead of simple welcome message
+    this.innerHTML = '';
+    const gallery = document.createElement('project-gallery') as ProjectGallery;
+    this.appendChild(gallery);
+    gallery.setGitInfo(this.gitInfo);
+    gallery.setProjects(this.projects, this.title);
   }
 
   /**
