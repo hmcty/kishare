@@ -11,11 +11,11 @@ import {
 import { router } from "../lib/router.js";
 import { isSafeUrl, githubIcon } from "../lib/html-utils.js";
 import { SIDEBAR } from "../lib/constants.js";
-import { ProjectList } from "./project-list.js";
+import { ProjectDetail } from "./project-detail.js";
 import { ViewerPanel } from "./viewer-panel.js";
 
 export class WorkspaceApp extends HTMLElement {
-  private projectList!: ProjectList;
+  private projectDetail!: ProjectDetail;
   private viewerPanel!: ViewerPanel;
   private projects: ProjectMetadata[] = [];
   private title: string = "KiSite";
@@ -57,8 +57,8 @@ export class WorkspaceApp extends HTMLElement {
       this.viewerPanel.setGitInfo(index.git);
 
       // Update project list
-      this.projectList.setGitInfo(index.git);
-      this.projectList.setProjects(this.projects);
+      this.projectDetail.setGitInfo(index.git);
+      this.projectDetail.setProjects(this.projects);
 
       // Update viewer panel with projects for gallery view
       this.viewerPanel.setProjects(this.projects, this.title);
@@ -238,7 +238,7 @@ export class WorkspaceApp extends HTMLElement {
       } else {
         // Default route - show gallery
         this.viewerPanel.showWelcome();
-        this.projectList.setSelectedProject(null);
+        this.projectDetail.setSelectedProject(null);
         // Hide sidebar when showing gallery
         this.hideSidebar();
       }
@@ -264,7 +264,7 @@ export class WorkspaceApp extends HTMLElement {
     console.log(`Loading project: ${project.name}`);
 
     // Update UI
-    this.projectList.setSelectedProject(projectId);
+    this.projectDetail.setSelectedProject(projectId);
     this.viewerPanel.loadProject(project, position, marker);
   }
 
@@ -279,7 +279,7 @@ export class WorkspaceApp extends HTMLElement {
             <h1 class="sidebar-title">${this.title}</h1>
           </div>
           <div class="sidebar-content">
-            <project-list></project-list>
+            <project-detail></project-detail>
           </div>
           <div class="sidebar-hints">
             <div class="hint">Right-click to pan</div>
@@ -301,7 +301,7 @@ export class WorkspaceApp extends HTMLElement {
     `;
 
     // Get references to child components
-    this.projectList = this.querySelector("project-list") as ProjectList;
+    this.projectDetail = this.querySelector("project-detail") as ProjectDetail;
     this.viewerPanel = this.querySelector("viewer-panel") as ViewerPanel;
   }
 }

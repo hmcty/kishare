@@ -1,5 +1,5 @@
 /**
- * Project list component - displays navigation sidebar
+ * Project detail component - displays project metadata and documentation in the sidebar
  */
 
 import { Marked } from "marked";
@@ -9,10 +9,9 @@ import type { ProjectMetadata, GitInfo } from "../lib/project-index.js";
 import { router } from "../lib/router.js";
 import { isSafeUrl, githubIcon } from "../lib/html-utils.js";
 
-export class ProjectList extends HTMLElement {
+export class ProjectDetail extends HTMLElement {
   private projects: ProjectMetadata[] = [];
   private selectedProjectId: string | null = null;
-  private viewMode: "list" | "detail" = "list";
   private gitInfo: GitInfo | null = null;
 
   constructor() {
@@ -43,44 +42,26 @@ export class ProjectList extends HTMLElement {
    */
   setSelectedProject(projectId: string | null) {
     this.selectedProjectId = projectId;
-    // Switch to detail view when a project is selected
-    this.viewMode = projectId ? "detail" : "list";
     this.render();
   }
 
   /**
-   * Return to project list view
+   * Navigate back to the gallery
    */
-  private showProjectList() {
-    this.viewMode = "list";
+  private backToGallery() {
     this.selectedProjectId = null;
     router.navigate("/");
   }
 
   /**
-   * Handle project click
-   */
-  private handleProjectClick(projectId: string) {
-    router.navigate("/project", projectId);
-  }
-
-  /**
-   * Render the project list
+   * Render the component
    */
   private render() {
-    if (this.projects.length === 0) {
-      this.innerHTML = `
-        <div class="empty">
-          <p>No projects found</p>
-        </div>
-      `;
+    if (this.projects.length === 0 || !this.selectedProjectId) {
+      this.innerHTML = "";
       return;
     }
-
-    // Render based on view mode
-    if (this.viewMode === "detail" && this.selectedProjectId) {
-      this.renderDetailView();
-    }
+    this.renderDetailView();
   }
 
   /**
@@ -185,7 +166,7 @@ export class ProjectList extends HTMLElement {
     const backButton = this.querySelector(".back-button");
     if (backButton) {
       backButton.addEventListener("click", () => {
-        this.showProjectList();
+        this.backToGallery();
       });
     }
   }
@@ -243,43 +224,7 @@ export class ProjectList extends HTMLElement {
       ALLOW_DATA_ATTR: false,
     });
   }
-
-  /**
-   * Render a single project item
-   */
-  private renderProjectItem(project: ProjectMetadata): string {
-    const isSelected = project.id === this.selectedProjectId;
-    const selectedClass = isSelected ? " selected" : "";
-
-    const badges = [];
-    if (project.schematics.length > 0) {
-      badges.push(`<span class="badge badge-sch">Sch</span>`);
-    }
-    if (project.pcb) {
-      badges.push(`<span class="badge badge-pcb">PCB</span>`);
-    }
-
-    const downloadBtn = project.zip
-      ? `
-      <a href="${project.zip}" download class="download-btn" title="Download project">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-        </svg>
-      </a>
-    `
-      : "";
-
-    return `
-      <li class="project-item${selectedClass}" data-project-id="${project.id}">
-        <div class="project-name">${project.name}</div>
-        <div class="project-actions">
-          <div class="project-badges">${badges.join(" ")}</div>
-          ${downloadBtn}
-        </div>
-      </li>
-    `;
-  }
 }
 
 // Register custom element
-customElements.define("project-list", ProjectList);
+customElements.define("project-detail", ProjectDetail);

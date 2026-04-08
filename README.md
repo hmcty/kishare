@@ -124,6 +124,7 @@ npm exec kisite dev
 - Support for custom themes and site customization
 - Improved workspace layout
 - 3D renderings
+- Diff view and PR support
 
 ## Alternatives
 

@@ -226,14 +226,10 @@ workspace-app {
   overflow-x: hidden;
 }
 
-/* Project list */
-project-list {
+/* Project detail */
+project-detail {
   display: block;
   padding: 8px;
-}
-
-.project-list {
-  list-style: none;
 }
 
 .project-item {
